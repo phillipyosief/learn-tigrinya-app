@@ -1,34 +1,47 @@
 import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import { SafeAreaView, Text, StyleSheet, Animated, Easing } from 'react-native';
 
 interface IntroScreenProps {
   onFinish: () => void;
 }
 
 export default function IntroScreen({ onFinish }: IntroScreenProps) {
+  const slide = useRef(new Animated.Value(30)).current;
   const opacity = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
     Animated.sequence([
-      Animated.timing(opacity, {
-        toValue: 1,
-        duration: 1000,
-        useNativeDriver: true,
-      }),
-      Animated.delay(2000),
+      Animated.parallel([
+        Animated.timing(slide, {
+          toValue: 0,
+          duration: 800,
+          easing: Easing.out(Easing.ease),
+          useNativeDriver: true,
+        }),
+        Animated.timing(opacity, {
+          toValue: 1,
+          duration: 800,
+          useNativeDriver: true,
+        }),
+      ]),
+      Animated.delay(2200),
       Animated.timing(opacity, {
         toValue: 0,
         duration: 500,
         useNativeDriver: true,
       }),
     ]).start(onFinish);
-  }, [onFinish, opacity]);
+  }, [onFinish, opacity, slide]);
 
   return (
-    <View style={styles.container}>
-      <Animated.Text style={[styles.title, { opacity }]}>እንቋዕ ብደሓን መጻእኩም!</Animated.Text>
-      <Animated.Text style={[styles.subtitle, { opacity }]}>Discover the beauty of the Tigrinya language</Animated.Text>
-    </View>
+    <SafeAreaView style={styles.container}>
+      <Animated.Text style={[styles.title, { opacity, transform: [{ translateY: slide }] }]}>
+        እንቋዕ ብደሓን መጻእኩም!
+      </Animated.Text>
+      <Animated.Text style={[styles.subtitle, { opacity, transform: [{ translateY: slide }] }]}>
+        Discover the beauty of the Tigrinya language
+      </Animated.Text>
+    </SafeAreaView>
   );
 }
 
@@ -41,13 +54,14 @@ const styles = StyleSheet.create({
     padding: 20,
   },
   title: {
-    fontSize: 28,
-    fontWeight: 'bold',
+    fontSize: 32,
+    fontWeight: '600',
     textAlign: 'center',
   },
   subtitle: {
-    fontSize: 16,
-    marginTop: 20,
+    fontSize: 18,
+    marginTop: 12,
     textAlign: 'center',
+    color: '#555',
   },
 });
