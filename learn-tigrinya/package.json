@@ -2,7 +2,6 @@
   "name": "learn-tigrinya",
   "version": "1.0.0",
   "main": "index.js",
-
   "scripts": {
     "start": "expo start",
     "android": "expo start --android",
@@ -12,6 +11,7 @@
   "dependencies": {
     "@expo/metro-runtime": "~5.0.4",
     "expo": "~53.0.12",
+    "expo-router": "^5.1.0",
     "expo-status-bar": "~2.2.3",
     "react": "19.0.0",
     "react-dom": "19.0.0",
