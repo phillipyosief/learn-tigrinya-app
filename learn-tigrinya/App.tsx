@@ -1,12 +1,21 @@
+import React, { useState } from 'react';
+import { SafeAreaView, StyleSheet } from 'react-native';
+import IntroScreen from './IntroScreen';
+import AuthScreen from './AuthScreen';
 import { StatusBar } from 'expo-status-bar';
-import { StyleSheet, Text, View } from 'react-native';
 
 export default function App() {
+  const [showIntro, setShowIntro] = useState(true);
+
   return (
-    <View style={styles.container}>
-      <Text>Open up App.tsx to start working on your app!</Text>
+    <SafeAreaView style={styles.container}>
       <StatusBar style="auto" />
-    </View>
+      {showIntro ? (
+        <IntroScreen onFinish={() => setShowIntro(false)} />
+      ) : (
+        <AuthScreen />
+      )}
+    </SafeAreaView>
   );
 }
 
@@ -14,7 +23,5 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     backgroundColor: '#fff',
-    alignItems: 'center',
-    justifyContent: 'center',
   },
 });
