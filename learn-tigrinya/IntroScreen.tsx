@@ -41,31 +41,42 @@ export default function IntroScreen({ onFinish }: IntroScreenProps) {
       <Image source={{ uri: STORY_IMAGES[index] }} style={styles.image} />
       <View style={styles.progressRow} pointerEvents="none">
         {STORY_IMAGES.map((_, i) => {
-          const widthStyle =
-            i < index
-              ? { width: '100%' }
-              : i === index
-              ? { width: progress.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }
-              : { width: '0%' };
+          let flexStyle;
+          if (i < index) {
+            flexStyle = { flex: 1 };
+          } else if (i === index) {
+            flexStyle = { flex: progress };
+          } else {
+            flexStyle = { flex: 0 };
+          }
           return (
             <View key={i} style={styles.progressBackground}>
-              <Animated.View style={[styles.progressFill, widthStyle]} />
+              <Animated.View style={[styles.progressFill, flexStyle]} />
             </View>
           );
         })}
+      </View>
     </View>
+  );
+}
 
+const styles = StyleSheet.create({
+  container: {
+    flex: 1,
     backgroundColor: '#000',
+  },
   image: {
     position: 'absolute',
     width: '100%',
     height: '100%',
+  },
   progressRow: {
     position: 'absolute',
     flexDirection: 'row',
     top: 40,
     left: 10,
     right: 10,
+  },
   progressBackground: {
     flex: 1,
     height: 4,
@@ -79,17 +90,10 @@ export default function IntroScreen({ onFinish }: IntroScreenProps) {
   alphabetWrapper: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
-
     justifyContent: 'space-between',
   },
   alphabetText: {
-    fontSize: 20,
-
-    justifyContent: 'space-around',
-  },
-  alphabetText: {
     fontSize: 16,
-
     color: '#000',
   },
   title: {
