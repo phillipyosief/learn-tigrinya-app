@@ -70,12 +70,14 @@ export default function IntroScreen({ onFinish }: IntroScreenProps) {
   });
 
   return (
+
     <Animated.View
       style={[
         styles.container,
         { opacity: containerOpacity, transform: [{ perspective: 1000 }, { rotateX }] },
       ]}
     >
+    <View style={styles.container}>
       <View style={styles.alphabetWrapper} pointerEvents="none">
         {ALPHABET_LINES.map((line, idx) => (
           <Text
@@ -89,9 +91,15 @@ export default function IntroScreen({ onFinish }: IntroScreenProps) {
           </Text>
         ))}
       </View>
+
       <Text style={styles.title}>እንቋዕ ብደሓን መጻእኩም!</Text>
       <Text style={styles.subtitle}>Discover the beauty of the Tigrinya language</Text>
     </Animated.View>
+=======
+      <Animated.Text style={[styles.title, { opacity }]}>እንቋዕ ብደሓን መጻእኩም!</Animated.Text>
+      <Animated.Text style={[styles.subtitle, { opacity }]}>Discover the beauty of the Tigrinya language</Animated.Text>
+    </View>
+
   );
 }
 
@@ -106,10 +114,17 @@ const styles = StyleSheet.create({
   alphabetWrapper: {
     ...StyleSheet.absoluteFillObject,
     alignItems: 'center',
+
     justifyContent: 'space-between',
   },
   alphabetText: {
     fontSize: 20,
+
+    justifyContent: 'space-around',
+  },
+  alphabetText: {
+    fontSize: 16,
+
     color: '#000',
   },
   title: {
