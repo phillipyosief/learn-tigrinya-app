@@ -1,40 +1,12 @@
-import React, { useEffect, useRef } from 'react';
-import { View, Text, StyleSheet, Animated } from 'react-native';
+import React, { useState, useEffect, useRef } from 'react';
+import { View, StyleSheet, Animated, Image } from 'react-native';
 
-const ALPHABET_LINES = [
-  'ሀሁሂሃሄህሆ',
-  'ለሉሊላሌልሎ',
-  'ሐሑሒሓሔሕሖ',
-  'መሙሚማሜምሞ',
-  'ሠሡሢሣሤሥሦ',
-  'ረሩሪራሬርሮ',
-  'ሰሱሲሳሴስሶ',
-  'ሸሹሺሻሼሽሾ',
-  'ቀቁቂቃቄቅቆ',
-  'በቡቢባቤብቦ',
-  'ተቱቲታቴትቶ',
-  'ቸቹቺቻቼችቾ',
-  'ኀኁኂኃኄኅኆ',
-  'ነኑኒናኔንኖ',
-  'ኘኙኚኛኜኝኞ',
-  'አኡኢኣኤእኦ',
-  'ከኩኪካኬክኮ',
-  'ኸኹኺኻኼኽኾ',
-  'ወዉዊዋዌውዎ',
-  'ዐዑዒዓዔዕዖ',
-  'ዘዙዚዛዜዝዞ',
-  'ዠዡዢዣዤዥዦ',
-  'የዩዪያዬይዮ',
-  'ደዱዲዳዴድዶ',
-  'ጀጁጂጃጄጅጆ',
-  'ገጉጊጋጌግጎ',
-  'ጠጡጢጣጤጥጦ',
-  'ጨጩጪጫጬጭጮ',
-  'ጰጱጲጳጴጵጶ',
-  'ጸጹጺጻጼጽጾ',
-  'ፀፁፂፃፄፅፆ',
-  'ፈፉፊፋፌፍፎ',
-  'ፐፑፒፓፔፕፖ',
+const STORY_IMAGES = [
+  'https://images.unsplash.com/photo-1506819924169-6e03ce37f04e',
+  'https://images.unsplash.com/photo-1529781919139-406bcdfe1283',
+  'https://images.unsplash.com/photo-1542826829-c2d9c7b62f75',
+  'https://images.unsplash.com/photo-1526336024174-e58f5cdd8e13',
+  'https://images.unsplash.com/photo-1533049022221-0d8f8e05bd33',
 ];
 
 interface IntroScreenProps {
@@ -42,74 +14,67 @@ interface IntroScreenProps {
 }
 
 export default function IntroScreen({ onFinish }: IntroScreenProps) {
-  const anim = useRef(new Animated.Value(0)).current;
+  const [index, setIndex] = useState(0);
+  const progress = useRef(new Animated.Value(0)).current;
 
   useEffect(() => {
-    Animated.sequence([
-      Animated.timing(anim, {
-        toValue: 1,
-        duration: 1500,
-        useNativeDriver: true,
-      }),
-      Animated.delay(1500),
-      Animated.timing(anim, {
-        toValue: 2,
-        duration: 800,
-        useNativeDriver: true,
-      }),
-    ]).start(onFinish);
-  }, [onFinish, anim]);
-
-  const rotateX = anim.interpolate({
-    inputRange: [0, 1, 2],
-    outputRange: ['-70deg', '0deg', '70deg'],
-  });
-  const containerOpacity = anim.interpolate({
-    inputRange: [0, 0.2, 1.8, 2],
-    outputRange: [0, 1, 1, 0],
-  });
+    progress.setValue(0);
+    const animation = Animated.timing(progress, {
+      toValue: 1,
+      duration: 2000,
+      useNativeDriver: false,
+    });
+    animation.start(({ finished }) => {
+      if (finished) {
+        if (index < STORY_IMAGES.length - 1) {
+          setIndex(index + 1);
+        } else {
+          onFinish();
+        }
+      }
+    });
+    return () => animation.stop();
+  }, [index, onFinish, progress]);
 
   return (
-
-    <Animated.View
-      style={[
-        styles.container,
-        { opacity: containerOpacity, transform: [{ perspective: 1000 }, { rotateX }] },
-      ]}
-    >
     <View style={styles.container}>
-      <View style={styles.alphabetWrapper} pointerEvents="none">
-        {ALPHABET_LINES.map((line, idx) => (
-          <Text
-            key={idx}
-            style={[
-              styles.alphabetText,
-              { opacity: 0.5 - (idx / (ALPHABET_LINES.length - 1)) * 0.4 },
-            ]}
-          >
-            {line}
-          </Text>
-        ))}
-      </View>
-
-      <Text style={styles.title}>እንቋዕ ብደሓን መጻእኩም!</Text>
-      <Text style={styles.subtitle}>Discover the beauty of the Tigrinya language</Text>
-    </Animated.View>
-=======
-      <Animated.Text style={[styles.title, { opacity }]}>እንቋዕ ብደሓን መጻእኩም!</Animated.Text>
-      <Animated.Text style={[styles.subtitle, { opacity }]}>Discover the beauty of the Tigrinya language</Animated.Text>
+      <Image source={{ uri: STORY_IMAGES[index] }} style={styles.image} />
+      <View style={styles.progressRow} pointerEvents="none">
+        {STORY_IMAGES.map((_, i) => {
+          const widthStyle =
+            i < index
+              ? { width: '100%' }
+              : i === index
+              ? { width: progress.interpolate({ inputRange: [0, 1], outputRange: ['0%', '100%'] }) }
+              : { width: '0%' };
+          return (
+            <View key={i} style={styles.progressBackground}>
+              <Animated.View style={[styles.progressFill, widthStyle]} />
+            </View>
+          );
+        })}
     </View>
 
-  );
-}
-
-const styles = StyleSheet.create({
-  container: {
+    backgroundColor: '#000',
+  image: {
+    position: 'absolute',
+    width: '100%',
+    height: '100%',
+  progressRow: {
+    position: 'absolute',
+    flexDirection: 'row',
+    top: 40,
+    left: 10,
+    right: 10,
+  progressBackground: {
     flex: 1,
-    alignItems: 'center',
-    justifyContent: 'center',
+    height: 4,
+    backgroundColor: 'rgba(255,255,255,0.3)',
+    marginHorizontal: 2,
+  },
+  progressFill: {
+    height: 4,
     backgroundColor: '#fff',
-    padding: 20,
   },
   alphabetWrapper: {
     ...StyleSheet.absoluteFillObject,
