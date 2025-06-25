@@ -23,6 +23,7 @@ export default function InfoScreen({ onContinue }: InfoScreenProps) {
       <Text style={styles.paragraph}>{"\u2022"} Each consonant has seven vowel forms, giving the writing system its unique look.</Text>
       <Text style={styles.paragraph}>{"\u2022"} A common greeting is "እንቋዕ ብደሓን መጻእኩም" meaning "Welcome!"</Text>
 
+
       <TouchableOpacity style={styles.button} onPress={onContinue}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
