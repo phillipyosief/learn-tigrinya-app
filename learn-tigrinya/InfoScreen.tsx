@@ -18,6 +18,12 @@ export default function InfoScreen({ onContinue }: InfoScreenProps) {
       <Text style={styles.paragraph}>
         Today, Tigrinya is known for its rich verb morphology and variety of dialects across the region. Learning the Ge'ez alphabet is the first step toward appreciating this beautiful language.
       </Text>
+
+      <Text style={styles.paragraph}>{"\u2022"} The script has over 200 characters derived from 26 base symbols.</Text>
+      <Text style={styles.paragraph}>{"\u2022"} Each consonant has seven vowel forms, giving the writing system its unique look.</Text>
+      <Text style={styles.paragraph}>{"\u2022"} A common greeting is "እንቋዕ ብደሓን መጻእኩም" meaning "Welcome!"</Text>
+
+
       <TouchableOpacity style={styles.button} onPress={onContinue}>
         <Text style={styles.buttonText}>Continue</Text>
       </TouchableOpacity>
